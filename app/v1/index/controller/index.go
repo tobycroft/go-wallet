@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/tobycroft/gorose-pro"
 	"log"
+	"main.go/common/BaseModel/SystemParamModel"
 	"main.go/tuuz/Mail"
 	"net/smtp"
 	"strings"
@@ -17,14 +18,15 @@ func IndexController(route *gin.RouterGroup) {
 }
 
 func index_register(c *gin.Context) {
-	// Setup an unencrypted connection to a local mail server.
-	// Set the sender and recipient, and send the email all in one step.
-
+	mail_host := SystemParamModel.Api_find_val("mail_host")
+	mail_user := SystemParamModel.Api_find_val("mail_user")
+	mail_password := SystemParamModel.Api_find_val("mail_password")
 	mail := Mail.SendStruct{
-		Host:     "localhost",
-		User:     "verify@tuuz.cc",
-		Password: "qwerty123",
+		Host:     mail_host.(string),
+		User:     mail_user.(string),
+		Password: mail_password.(string),
 		Title:    "[GoWallet]Your Verify Code",
+		Content:  "Your code is:123456",
 	}
 
 	err := mail.SendMail()
