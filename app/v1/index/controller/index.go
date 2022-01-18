@@ -25,7 +25,7 @@ func index_register(c *gin.Context) {
 		Title:    "[GoWallet]Your Verify Code",
 		Content:  "Your code is:123456",
 	}
-
+	mail.To = "2539@tuuz.cc"
 	err := mail.SendMail()
 	fmt.Println(err)
 }
