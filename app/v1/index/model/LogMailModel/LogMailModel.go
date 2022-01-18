@@ -39,3 +39,35 @@ func Api_count(ip interface{}) int64 {
 		return ret
 	}
 }
+
+func Api_count_today(ip interface{}) int64 {
+	db := tuuz.Db().Table(table)
+	where := map[string]interface{}{
+		"ip": ip,
+	}
+	db.Where(where)
+	db.Where("date > current_date")
+	ret, err := db.Count()
+	if err != nil {
+		Log.Dbrr(err, tuuz.FUNCTION_ALL())
+		return 0
+	} else {
+		return ret
+	}
+}
+
+func Api_count_60(ip interface{}) int64 {
+	db := tuuz.Db().Table(table)
+	where := map[string]interface{}{
+		"ip": ip,
+	}
+	db.Where(where)
+	db.Where("date > FROM_UNIXTIME((UNIX_TIMESTAMP()-60))")
+	ret, err := db.Count()
+	if err != nil {
+		Log.Dbrr(err, tuuz.FUNCTION_ALL())
+		return 0
+	} else {
+		return ret
+	}
+}

@@ -20,9 +20,14 @@ func index_mail(c *gin.Context) {
 	if !ok {
 		return
 	}
-	count := LogMailModel.Api_count(c.ClientIP())
+	count1 := LogMailModel.Api_count_60(c.ClientIP())
+	if count1 > 10 {
+		RET.Fail(c, 403, nil, "邮件需要间隔一分钟")
+		return
+	}
+	count := LogMailModel.Api_count_today(c.ClientIP())
 	if count > 10 {
-		RET.Fail(c, 403, nil, "请勿一天内提交多次")
+		RET.Fail(c, 403, nil, "一天内只能注册10次")
 		return
 	}
 	mail_host := SystemParamModel.Api_find_val("mail_host")
