@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"main.go/app/v1/index/model/LogMailModel"
 	"main.go/app/v1/index/model/VerifyModel"
+	"main.go/app/v1/user/model/UserModel"
 	"main.go/common/BaseModel/SystemParamModel"
 	"main.go/tuuz/Calc"
 	"main.go/tuuz/Input"
@@ -57,6 +58,27 @@ func index_mail(c *gin.Context) {
 	} else {
 		LogMailModel.Api_insert(c.ClientIP(), 1, mailaddr, "")
 	}
+}
+
+func index_register(c *gin.Context) {
+	mailaddr, ok := Input.Post("mail", c, false)
+	if !ok {
+		return
+	}
+	password, ok := Input.Post("password", c, false)
+	if !ok {
+		return
+	}
+	code, ok := Input.PostInt("code", c)
+	if !ok {
+		return
+	}
+	if len(VerifyModel.Api_find_today(mailaddr, code)) < 1 {
+		RET.Fail(c, 500, nil, nil)
+		return
+	}
+	var usr UserModel.Interface
+	usr.Api_insert(0, mailaddr, Calc.Md5(password), "zh-cn")
 }
 
 func index(c *gin.Context) {
