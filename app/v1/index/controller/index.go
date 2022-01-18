@@ -78,7 +78,12 @@ func index_register(c *gin.Context) {
 		return
 	}
 	var usr UserModel.Interface
-	usr.Api_insert(0, mailaddr, Calc.Md5(password), "zh-cn")
+	if usr.Api_insert(0, mailaddr, Calc.Md5(password), "en") == 0 {
+		RET.Fail(c, 500, nil, nil)
+	} else {
+		VerifyModel.Api_delete(mailaddr)
+		RET.Success(c, 0, nil, nil)
+	}
 }
 
 func index(c *gin.Context) {
