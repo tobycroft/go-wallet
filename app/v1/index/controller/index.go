@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"main.go/app/v1/index/model/LogMailModel"
+	"main.go/app/v1/index/model/VerifyModel"
 	"main.go/common/BaseModel/SystemParamModel"
 	"main.go/tuuz/Calc"
 	"main.go/tuuz/Input"
@@ -43,7 +44,13 @@ func index_mail(c *gin.Context) {
 	mail.To = mailaddr
 	rand := Calc.Rand(100000, 999999)
 	mail.Content = "Your verify code is:[" + Calc.Int2String(rand) + "], this code will be avail in 24H"
+	if VerifyModel.Api_delete(mailaddr) {
 
+	}
+	if !VerifyModel.Api_insert(mailaddr, rand) {
+		RET.Fail(c, 500, nil, nil)
+		return
+	}
 	err := mail.SendMail()
 	if err != nil {
 		LogMailModel.Api_insert(c.ClientIP(), 0, mailaddr, err.Error())
