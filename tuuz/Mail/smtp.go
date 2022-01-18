@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-type Mailer struct {
+type SendStruct struct {
 	Host     string
 	User     string
 	Password string
@@ -24,7 +24,7 @@ func Send(host, user, password, to, title, content string) error {
 	return err
 }
 
-func (mail *Mailer) SendMail() error {
+func (mail *SendStruct) SendMail() error {
 	auth := smtp.PlainAuth("", mail.User, mail.Password, mail.Host)
 	content_type := "Content-Type: text/plain" + "; charset=UTF-8"
 
