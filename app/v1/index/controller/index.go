@@ -15,6 +15,7 @@ import (
 func IndexController(route *gin.RouterGroup) {
 	route.Any("", index)
 	route.Any("mail", index_mail)
+	route.Any("reg", index_register)
 }
 
 func index_mail(c *gin.Context) {
