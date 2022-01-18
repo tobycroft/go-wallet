@@ -4,11 +4,8 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/tobycroft/gorose-pro"
-	"log"
 	"main.go/common/BaseModel/SystemParamModel"
 	"main.go/tuuz/Mail"
-	"net/smtp"
-	"strings"
 )
 
 func IndexController(route *gin.RouterGroup) {
