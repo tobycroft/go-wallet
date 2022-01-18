@@ -1,33 +1,48 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/tobycroft/gorose-pro"
+	"main.go/app/v1/index/model/LogMailModel"
 	"main.go/common/BaseModel/SystemParamModel"
+	"main.go/tuuz/Input"
 	"main.go/tuuz/Mail"
+	"main.go/tuuz/RET"
 )
 
 func IndexController(route *gin.RouterGroup) {
 	route.Any("", index)
-	route.Any("login", loginss)
-	route.Any("register", index_register)
+	route.Any("mail", index_mail)
 }
 
-func index_register(c *gin.Context) {
+func index_mail(c *gin.Context) {
+	mailaddr, ok := Input.Post("mail", c, false)
+	if !ok {
+		return
+	}
+	count := LogMailModel.Api_count(c.ClientIP())
+	if count > 10 {
+		RET.Fail(c, 403, nil, "请勿一天内提交多次")
+		return
+	}
 	mail_host := SystemParamModel.Api_find_val("mail_host")
 	mail_user := SystemParamModel.Api_find_val("mail_user")
 	mail_password := SystemParamModel.Api_find_val("mail_password")
 	mail := Mail.SendStruct{
 		Host:     mail_host.(string),
+		Port:     "25",
 		User:     mail_user.(string),
 		Password: mail_password.(string),
 		Title:    "[GoWallet]Your Verify Code",
 		Content:  "Your code is:123456",
 	}
-	mail.To = "2539@tuuz.cc"
+	mail.To = mailaddr
 	err := mail.SendMail()
-	fmt.Println(err)
+	if err != nil {
+		LogMailModel.Api_insert(c.ClientIP(), 0, mailaddr, err.Error())
+	} else {
+		LogMailModel.Api_insert(c.ClientIP(), 1, mailaddr, "")
+	}
 }
 
 func index(c *gin.Context) {
