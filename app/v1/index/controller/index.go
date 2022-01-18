@@ -2,7 +2,6 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/tobycroft/gorose-pro"
 	"main.go/app/v1/index/model/LogMailModel"
 	"main.go/common/BaseModel/SystemParamModel"
 	"main.go/tuuz/Input"
@@ -52,14 +51,4 @@ func index_mail(c *gin.Context) {
 
 func index(c *gin.Context) {
 	c.String(0, "index")
-}
-
-func loginss(c *gin.Context) {
-	password := c.Query("password")
-	username := c.Query("username")
-	json := map[string]string{}
-	json["username"] = username
-	json["password"] = password
-	gorose.Open()
-	c.JSON(0, json)
 }
