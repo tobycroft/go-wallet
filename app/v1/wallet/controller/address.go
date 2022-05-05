@@ -15,7 +15,7 @@ import (
 
 func AddressController(route *gin.RouterGroup) {
 	route.Use(BaseController.CorsController())
-
+	route.Use(BaseController.LoginedController())
 	route.Any("create", address_create)
 }
 
@@ -69,7 +69,6 @@ func address_create(c *gin.Context) {
 		db.Begin()
 		var usermodel UserModel.Interface
 		usermodel.Db = db
-		uid := usermodel.Api_insert(invite_data["id"], address, Calc.Md5(password), "", nil, "cn", address)
 		if uid != 0 {
 			token := Calc.GenerateToken()
 			if !TokenModel.Api_insert(uid, token, "app") {

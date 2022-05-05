@@ -6,19 +6,19 @@ import (
 	"main.go/tuuz/Log"
 )
 
-const table = "xrc_user_address"
+const table = "w_user_address"
 
 type Interface struct {
 	Db gorose.IOrm
 }
 
-func (self *Interface) Api_insert(Type, uid, address, word interface{}) bool {
+func (self *Interface) Api_insert(Type, uid, address, secret interface{}) bool {
 	db := self.Db.Table(table)
 	data := map[string]interface{}{
 		"type":    Type,
 		"uid":     uid,
 		"address": address,
-		"word":    word,
+		"secret":  secret,
 	}
 	db.Data(data)
 	_, err := db.Insert()
